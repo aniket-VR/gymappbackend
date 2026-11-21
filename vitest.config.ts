@@ -14,10 +14,10 @@ export default defineConfig({
     env: {
       NODE_ENV: 'test',
       LOG_LEVEL: 'silent',
-      PORT: '4999',
+      PORT: '3000',
       DATABASE_URL:
         process.env['TEST_DATABASE_URL'] ??
-        'postgresql://test_user:test_password@localhost:5432/gymconnect_test',
+        'postgresql://postgres:root123@localhost:5432/gymconnect',
       JWT_ACCESS_SECRET: 'test-access-secret-0123456789abcdef0123456789',
       JWT_REFRESH_SECRET: 'test-refresh-secret-0123456789abcdef012345678',
       FRONTEND_ORIGINS: 'http://localhost:3000,http://localhost:5173',
