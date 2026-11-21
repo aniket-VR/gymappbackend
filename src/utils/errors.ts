@@ -1,0 +1,67 @@
+export interface ErrorDetail {
+  [key: string]: unknown;
+}
+
+/**
+ * An error that is safe to show to API clients. Anything that is NOT an AppError is treated as
+ * an unexpected failure and reported as a generic 500.
+ */
+export class AppError extends Error {
+  constructor(
+    public readonly statusCode: number,
+    public readonly code: string,
+    message: string,
+    public readonly details?: ErrorDetail[],
+  ) {
+    super(message);
+    this.name = new.target.name;
+  }
+}
+
+export class BadRequestError extends AppError {
+  constructor(message = 'Bad request', code = 'BAD_REQUEST', details?: ErrorDetail[]) {
+    super(400, code, message, details);
+  }
+}
+
+export interface ValidationIssue extends ErrorDetail {
+  location: 'body' | 'query' | 'params';
+  path: string;
+  message: string;
+}
+
+export class ValidationError extends AppError {
+  constructor(issues: ValidationIssue[]) {
+    super(400, 'VALIDATION_ERROR', 'Request validation failed', issues);
+  }
+}
+
+export class UnauthorizedError extends AppError {
+  constructor(message = 'Authentication required', code = 'UNAUTHORIZED') {
+    super(401, code, message);
+  }
+}
+
+export class ForbiddenError extends AppError {
+  constructor(message = 'You do not have permission to perform this action', code = 'FORBIDDEN') {
+    super(403, code, message);
+  }
+}
+
+export class NotFoundError extends AppError {
+  constructor(message = 'Resource not found', code = 'NOT_FOUND') {
+    super(404, code, message);
+  }
+}
+
+export class ConflictError extends AppError {
+  constructor(message = 'Resource conflict', code = 'CONFLICT') {
+    super(409, code, message);
+  }
+}
+
+export class TooManyRequestsError extends AppError {
+  constructor(message = 'Too many requests, please try again later') {
+    super(429, 'TOO_MANY_REQUESTS', message);
+  }
+}
